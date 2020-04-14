@@ -6,22 +6,22 @@
     <body>
         <style type="text/css">
         .title{
-            color: mediumspringgreen;
+            color: green;
         }
         </style>
 
         <div id="app">
-            <h1 v-bind:class="class_h1"> {{ pesan }} </h1>
+            <img :src="'images/books/' + avatar.image" />
         </div>
 
         <script type="text/javascript">
-        Vue.config.silent = true
         var vm = new Vue({
             el: '#app',
             data: {
-                pesan: "Selamat Pagi",
-                class_h1: "title"
-            },
+                avatar:{
+                    image: 'ww.jpeg'
+                }
+            }
         })
         </script>
     </body>
