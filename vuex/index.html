@@ -1,0 +1,87 @@
+<html>
+    <head>
+        <title>
+            Belajar Vuex
+        </title>
+        <script src="../lib/vue.js"></script>
+        <script src="../lib/vue-router.js"></script>
+        <script src="../lib/vuex.js"></script>
+    </head>
+    <body>
+        <div id="app">
+            <ul v-for="book in books">
+                <li>{{ book.judul }}</li>
+            </ul>
+        </div>
+
+        <script type="text/javascript">
+        var store = new Vuex.Store({
+            strict: true,
+            state: {
+                books: []
+            },
+            mutations:{
+                setBooks(state, books){
+                    state.books = books
+                }
+            },
+            actions:{
+                getBooks ({ commit }){
+                    return new Promise((resolve, reject) =>{
+                        resolve()
+                        reject()
+                    })
+                }
+            },
+            getters:{
+                books: state => state.books
+            }
+        })
+
+        getBooks ({ commit }) {
+            return new Promise((resolve, reject) =>{
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", "https://api.jsonbin.io/b/5e96b00e5fa47104cea0bf52");
+                xhr.onload = function(){
+                    if (this.status >= 200 && this.status < 300 ){
+                        commit('setBooks', JSON.parse(xhr.response))
+                        resolve(xhr.response);
+                    }else{
+                        reject({
+                            status: this.status,
+                            statusText: xhr.statusText
+                        });
+                    }
+                };
+                xhr.onerror = function(){
+                    reject({
+                        status: this.status,
+                        statusText: xhr.statusText
+                    });
+                };
+                xhr.send();
+            })
+        }
+        
+        new Vue({
+            el: '#app',
+            store,
+            computed:{
+                books(){
+                    return store.getters.books
+                }
+            },
+            created(){
+                store.dispatch('getBooks')
+                    .then((response) => {
+                        console.log('result: ', response)
+                    })
+                    .catch((error) => {
+                        console.log('error: ', error)
+                    })
+            }
+        })
+
+        </script>
+    </body>
+</html>
